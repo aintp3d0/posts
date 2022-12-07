@@ -26,7 +26,11 @@ def file_date(src: Path, use_name: bool = False, date_fmt: str | None = None) ->
     return src_date[0]
 
 
-def files2dt_dir(src: Path, use_name: bool = False, date_fmt: str | None = None, copy: bool = False) -> None:
+def files2dt_dir(
+            src: Path,
+            use_name: bool = False, date_fmt: str | None = None,
+            copy: bool = False
+    ) -> ValueError | None:
     """Sorting files to their `date` directory
 
     Parameters
@@ -38,16 +42,15 @@ def files2dt_dir(src: Path, use_name: bool = False, date_fmt: str | None = None,
     date_fmt : str, None = None
         Date format in the filename
     copy : bool = False
-        Flag to `copy` files or create a new one
+        Flag to `copy` files or `move` (replaces the exists)
     """
     # TODO: output_fmt
     if not src.is_dir():
-        print('Ignored, requires a directory:', src)
-        exit()
+        raise ValueError(f"Ignored, requires a directory: {src}")
 
     for child in src.iterdir():
         if not child.is_file():
-            print('Ignored, not a file:', child)
+            # TODO: add recursion
             continue
 
         child_date = file_date(child, use_name=use_name, date_fmt=date_fmt)
@@ -60,10 +63,6 @@ def files2dt_dir(src: Path, use_name: bool = False, date_fmt: str | None = None,
             child_date.mkdir()
 
         dst = child_date.joinpath(child.name)
-        if dst.is_file():
-            print('Ignored, file exists:', dst)
-            continue
-
         if not copy:
             child.rename(dst)
         else:
