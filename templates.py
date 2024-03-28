@@ -5,13 +5,13 @@
 if __name__ == '__main__':
     import datetime as dt
 
-    from posts.templates.twitter import create
+    from posts.templates.twitter.BangDream import create
 
 
     j = create(
-        dt.date(2022, 12, 2),
+        dt.date(2022, 12, 13),
         ('BangDream', 'FullCombo'),
         tuple(),
-        '4 HARD'
+        '2 HARD'
     )
     print(j)
